@@ -23,6 +23,18 @@ public class FlightService {
     }
 
     public Flight saveFlight(Flight flight) {
+        if (checkFlightOverlap(flight)) {
+            throw new RuntimeException("Flight time overlaps with another flight in the same airport");
+        }
         return flightRepository.save(flight);
+    }
+
+    private boolean checkFlightOverlap(Flight flight) {
+        List<Flight> overlappingFlights = flightRepository.findOverlappingFlights(
+                flight.getDepartureAirport().getId(),
+                flight.getDepartureTime(),
+                flight.getArrivalTime()
+        );
+        return !overlappingFlights.isEmpty();
     }
 }
