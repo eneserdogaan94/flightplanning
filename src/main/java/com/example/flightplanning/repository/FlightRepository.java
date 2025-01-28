@@ -9,13 +9,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface FlightRepository extends JpaRepository<Flight, Long> {
+public interface FlightRepository extends JpaRepository<Flight, Integer> {
 
     @Query("SELECT f FROM Flight f WHERE f.departureAirport.id = :airportId " +
             "AND (f.departureTime BETWEEN :startTime AND :endTime " +
             "OR f.arrivalTime BETWEEN :startTime AND :endTime)")
-    List<Flight> findOverlappingFlights(Long airportId, LocalDateTime startTime, LocalDateTime endTime);
+    List<Flight> findOverlappingFlights(Integer airportId, LocalDateTime startTime, LocalDateTime endTime);
 
     List<Flight> findByDepartureAirportIdAndArrivalAirportIdAndDepartureTimeBetween(
-            Long departureAirportId, Long arrivalAirportId, LocalDateTime start, LocalDateTime end);
+            Integer departureAirportId, Integer arrivalAirportId, LocalDateTime start, LocalDateTime end);
 }

@@ -18,7 +18,7 @@ public class FlightService {
         return flightRepository.findAll();
     }
 
-    public List<Flight> searchFlights(Long departureAirportId, Long arrivalAirportId, LocalDateTime start, LocalDateTime end) {
+    public List<Flight> searchFlights(Integer departureAirportId, Integer arrivalAirportId, LocalDateTime start, LocalDateTime end) {
         return flightRepository.findByDepartureAirportIdAndArrivalAirportIdAndDepartureTimeBetween(departureAirportId, arrivalAirportId, start, end);
     }
 

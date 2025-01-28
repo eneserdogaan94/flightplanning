@@ -29,8 +29,8 @@ public class FlightController {
 
     @GetMapping("/search")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public List<Flight> searchFlights(@RequestParam Long departureAirportId,
-                                      @RequestParam Long arrivalAirportId,
+    public List<Flight> searchFlights(@RequestParam Integer departureAirportId,
+                                      @RequestParam Integer arrivalAirportId,
                                       @RequestParam LocalDateTime start,
                                       @RequestParam LocalDateTime end) {
         return flightService.searchFlights(departureAirportId, arrivalAirportId, start, end);
