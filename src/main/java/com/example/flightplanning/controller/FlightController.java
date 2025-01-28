@@ -2,6 +2,8 @@ package com.example.flightplanning.controller;
 
 import com.example.flightplanning.entity.Flight;
 import com.example.flightplanning.service.FlightService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ public class FlightController {
 
     @GetMapping
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @Tag(name = "Flight Management", description = "Operations related to flight management")
     public List<Flight> getAllFlights() {
         return flightService.getAllFlights();
     }

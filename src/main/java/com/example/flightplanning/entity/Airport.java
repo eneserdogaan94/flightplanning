@@ -1,9 +1,10 @@
 package com.example.flightplanning.entity;
 
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name = "Airports")
+@Table(name = "airports")
 public class Airport {
 
     @Id
@@ -13,8 +14,14 @@ public class Airport {
     @Column(nullable = false)
     private String city;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String airportName;
+
+    @OneToMany(mappedBy = "departureAirport", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Flight> departureFlights;
+
+    @OneToMany(mappedBy = "arrivalAirport", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Flight> arrivalFlights;
 
     // Getters and Setters
     public Long getId() {
@@ -39,5 +46,21 @@ public class Airport {
 
     public void setAirportName(String airportName) {
         this.airportName = airportName;
+    }
+
+    public List<Flight> getDepartureFlights() {
+        return departureFlights;
+    }
+
+    public void setDepartureFlights(List<Flight> departureFlights) {
+        this.departureFlights = departureFlights;
+    }
+
+    public List<Flight> getArrivalFlights() {
+        return arrivalFlights;
+    }
+
+    public void setArrivalFlights(List<Flight> arrivalFlights) {
+        this.arrivalFlights = arrivalFlights;
     }
 }
