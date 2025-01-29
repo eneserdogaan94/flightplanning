@@ -1,5 +1,6 @@
 package com.example.flightplanning.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -13,11 +14,13 @@ public class Flight {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "departure_airport_id", nullable = false)
+    @JoinColumn(name = "departure_airport_id")
+    @JsonManagedReference
     private Airport departureAirport;
 
     @ManyToOne
-    @JoinColumn(name = "arrival_airport_id", nullable = false)
+    @JoinColumn(name = "arrival_airport_id")
+    @JsonManagedReference
     private Airport arrivalAirport;
 
     @Column(nullable = false)

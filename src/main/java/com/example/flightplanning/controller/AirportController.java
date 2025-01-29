@@ -21,6 +21,11 @@ public class AirportController {
         return airportService.getAllAirports();
     }
 
+    @GetMapping("/{id}")
+    public Airport getAirportById(int id) {
+        return airportService.getById(id);
+    }
+
     @PostMapping
     public ResponseEntity<Airport> saveAirport(@RequestBody Airport airport) {
         Airport savedAirport = airportService.saveAirport(airport);

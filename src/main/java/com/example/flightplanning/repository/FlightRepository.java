@@ -18,4 +18,7 @@ public interface FlightRepository extends JpaRepository<Flight, Integer> {
 
     List<Flight> findByDepartureAirportIdAndArrivalAirportIdAndDepartureTimeBetween(
             Integer departureAirportId, Integer arrivalAirportId, LocalDateTime start, LocalDateTime end);
+    List<Flight> findByDepartureAirportId(
+            Integer departureAirportId);
+
 }

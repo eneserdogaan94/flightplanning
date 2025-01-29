@@ -1,6 +1,9 @@
 package com.example.flightplanning.controller;
 
+import com.example.flightplanning.dto.request.FlightSaveRequest;
+import com.example.flightplanning.entity.Airport;
 import com.example.flightplanning.entity.Flight;
+import com.example.flightplanning.service.AirportService;
 import com.example.flightplanning.service.FlightService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,6 +23,9 @@ public class FlightController {
     @Autowired
     private FlightService flightService;
 
+    @Autowired
+    private AirportService airportService;
+
     @GetMapping
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @Tag(name = "Flight Management", description = "Operations related to flight management")
@@ -36,9 +42,23 @@ public class FlightController {
         return flightService.searchFlights(departureAirportId, arrivalAirportId, start, end);
     }
 
+    @GetMapping("/searchById")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public List<Flight> searchFlights(@RequestParam Integer departureAirportId
+                                      ) {
+        return flightService.searchDepartureAirportById(departureAirportId);
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Flight> saveFlight(@RequestBody Flight flight) {
+    public ResponseEntity<Flight> saveFlight(@RequestBody FlightSaveRequest flightSaveRequest) {
+        Airport departureAirport = airportService.getById(flightSaveRequest.getDepartureAirportId());
+        Airport arrivalAirport = airportService.getById(flightSaveRequest.getArrivalAirportId());
+        Flight flight=new Flight();
+        flight.setArrivalAirport(arrivalAirport);
+        flight.setDepartureAirport(departureAirport);
+        flight.setArrivalTime(flightSaveRequest.getArrivalTime());
+        flight.setDepartureTime(flightSaveRequest.getDepartureTime());
         Flight savedFlight = flightService.saveFlight(flight);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedFlight);
     }

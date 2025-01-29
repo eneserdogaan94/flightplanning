@@ -17,6 +17,11 @@ public class AirportService {
         return airportRepository.findAll();
     }
 
+    public Airport getById(int id) {
+        return airportRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Airport not found with id: " + id));
+    }
+
     public Airport saveAirport(Airport airport) {
         return airportRepository.save(airport);
     }

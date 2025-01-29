@@ -1,5 +1,6 @@
 package com.example.flightplanning.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -17,10 +18,12 @@ public class Airport {
     @Column(nullable = false, unique = true)
     private String airportName;
 
-    @OneToMany(mappedBy = "departureAirport", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "departureAirport")
+    @JsonBackReference
     private List<Flight> departureFlights;
 
-    @OneToMany(mappedBy = "arrivalAirport", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "arrivalAirport")
+    @JsonBackReference
     private List<Flight> arrivalFlights;
 
     // Getters and Setters

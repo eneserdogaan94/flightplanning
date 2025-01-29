@@ -21,6 +21,10 @@ public class FlightService {
     public List<Flight> searchFlights(Integer departureAirportId, Integer arrivalAirportId, LocalDateTime start, LocalDateTime end) {
         return flightRepository.findByDepartureAirportIdAndArrivalAirportIdAndDepartureTimeBetween(departureAirportId, arrivalAirportId, start, end);
     }
+    public List<Flight> searchDepartureAirportById(Integer departureAirportId) {
+        return flightRepository.findByDepartureAirportId(departureAirportId);
+    }
+
 
     public Flight saveFlight(Flight flight) {
         if (checkFlightOverlap(flight)) {
