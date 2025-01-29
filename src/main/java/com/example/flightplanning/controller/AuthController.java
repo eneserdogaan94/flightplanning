@@ -1,5 +1,10 @@
 package com.example.flightplanning.controller;
 
+import com.example.flightplanning.dto.request.LoginRequest;
+import com.example.flightplanning.dto.request.SignupRequest;
+import com.example.flightplanning.dto.response.ErrorResponse;
+import com.example.flightplanning.dto.response.LoginResponse;
+import com.example.flightplanning.dto.response.MessageResponse;
 import com.example.flightplanning.entity.Role;
 import com.example.flightplanning.entity.User;
 import com.example.flightplanning.security.JwtUtil;
@@ -10,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +41,6 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
-            // Kullanıcı adını ve şifreyi doğrula
             Authentication auth = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             loginRequest.getUsername(),
@@ -43,19 +48,14 @@ public class AuthController {
                     )
             );
 
-            // Doğrulama başarılıysa token üret
             UserDetails userDetails = (UserDetails) auth.getPrincipal();
             String token = jwtUtil.generateToken(userDetails.getUsername());
 
-            return ResponseEntity.ok(new LoginResponse("Giriş başarılı", token));
+            User user = userRepository.findByUsername(userDetails.getUsername());
+
+            return ResponseEntity.ok(new LoginResponse("Giriş başarılı", token, user.getRole().name()));
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(401).body(new ErrorResponse("Yanlış kullanıcı adı veya şifre!"));
-        } catch (DisabledException e) {
-            return ResponseEntity.status(403).body(new ErrorResponse("Hesabınız devre dışı bırakılmış!"));
-        } catch (LockedException e) {
-            return ResponseEntity.status(423).body(new ErrorResponse("Hesabınız kilitlenmiş!"));
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ErrorResponse("Bilinmeyen bir hata oluştu."));
         }
     }
 
@@ -97,118 +97,6 @@ public class AuthController {
             return ResponseEntity.ok(Map.of("username", username));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
-    }
-
-    // DTO sınıfları
-    static class LoginRequest {
-        private String username;
-        private String password;
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-    }
-
-    static class SignupRequest {
-        private String firstName;
-        private String lastName;
-        private String city;
-        private String username;
-        private String password;
-
-        public String getFirstName() {
-            return firstName;
-        }
-
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
-        }
-
-        public String getLastName() {
-            return lastName;
-        }
-
-        public void setLastName(String lastName) {
-            this.lastName = lastName;
-        }
-
-        public String getCity() {
-            return city;
-        }
-
-        public void setCity(String city) {
-            this.city = city;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-    }
-
-    static class LoginResponse {
-        private final String message;
-        private final String token;
-
-        public LoginResponse(String message, String token) {
-            this.message = message;
-            this.token = token;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public String getToken() {
-            return token;
-        }
-    }
-
-    static class ErrorResponse {
-        private final String error;
-
-        public ErrorResponse(String error) {
-            this.error = error;
-        }
-
-        public String getError() {
-            return error;
-        }
-    }
-
-    static class MessageResponse {
-        private final String message;
-
-        public MessageResponse(String message) {
-            this.message = message;
-        }
-
-        public String getMessage() {
-            return message;
         }
     }
 }
