@@ -22,6 +22,10 @@ public class AirportService {
                 .orElseThrow(() -> new RuntimeException("Airport not found with id: " + id));
     }
 
+    public Airport getByCity(String city) {
+        return airportRepository.findByCity(city);
+    }
+
     public Airport saveAirport(Airport airport) {
         return airportRepository.save(airport);
     }
