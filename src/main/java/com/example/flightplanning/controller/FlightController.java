@@ -19,6 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -41,7 +42,10 @@ public class FlightController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @Tag(name = "Flight Management", description = "Operations related to flight management")
     public List<Flight> getAllFlights() {
-        return flightService.getAllFlights();
+        return flightService.getAllFlights()
+                .stream()
+                .sorted(Comparator.comparing(Flight::getDepartureTime))
+                .toList();
     }
 
     @GetMapping("/search")
