@@ -8,6 +8,8 @@ import com.example.flightplanning.repository.FlightRepository;
 import com.example.flightplanning.security.JwtUtil;
 import org.jose4j.jwt.MalformedClaimException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestHeader;
 
@@ -30,8 +32,8 @@ public class FlightService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    public List<Flight> getAllFlights() {
-        return flightRepository.findAll();
+    public Page<Flight> getAllFlights(Pageable pageable) {
+        return flightRepository.findAll(pageable);
     }
 
     public List<Flight> searchFlights(Integer departureAirportId, Integer arrivalAirportId, LocalDateTime start, LocalDateTime end) {

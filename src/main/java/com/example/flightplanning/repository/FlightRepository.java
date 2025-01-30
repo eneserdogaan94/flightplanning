@@ -1,6 +1,8 @@
 package com.example.flightplanning.repository;
 
 import com.example.flightplanning.entity.Flight;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -24,5 +26,6 @@ public interface FlightRepository extends JpaRepository<Flight, Integer> {
             "AND f.departureTime BETWEEN :startTime AND :endTime")
     List<Flight> findFlightsFromSameCity(String city, LocalDateTime startTime, LocalDateTime endTime);
 
+    Page<Flight> findAll(Pageable pageable);
 
 }

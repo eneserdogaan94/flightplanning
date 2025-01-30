@@ -13,6 +13,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.jose4j.jwt.MalformedClaimException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,11 +45,9 @@ public class FlightController {
     @GetMapping
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @Tag(name = "Flight Management", description = "Operations related to flight management")
-    public List<Flight> getAllFlights() {
-        return flightService.getAllFlights()
-                .stream()
-                .sorted(Comparator.comparing(Flight::getDepartureTime))
-                .toList();
+    public Page<Flight> getAllFlights(
+            @PageableDefault(size = 5, sort = "departureTime", direction = Sort.Direction.ASC) Pageable pageable) {
+        return flightService.getAllFlights(pageable);
     }
 
     @GetMapping("/search")
