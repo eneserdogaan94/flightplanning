@@ -64,32 +64,7 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse("Çıkış yapıldı"));
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody SignupRequest signupRequest) {
-        try {
-            // Kullanıcıyı veritabanında kontrol et
-            Optional<User> existingUser = Optional.ofNullable(userRepository.findByUsername(signupRequest.getUsername()));
-            if (existingUser.isPresent()) {
-                return ResponseEntity.status(409).body(new ErrorResponse("Kullanıcı adı zaten mevcut!"));
-            }
 
-            // Yeni kullanıcı oluştur
-            User newUser = new User();
-            newUser.setFirstName(signupRequest.getFirstName());
-            newUser.setLastName(signupRequest.getLastName());
-            newUser.setCity(signupRequest.getCity());
-            newUser.setUsername(signupRequest.getUsername());
-            newUser.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
-            newUser.setRole(Role.USER); // Varsayılan olarak "USER" rolü atanıyor
-
-            // Veritabanına kaydet
-            userRepository.save(newUser);
-
-            return ResponseEntity.ok(new MessageResponse("Kullanıcı başarıyla kaydedildi!"));
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ErrorResponse("Kayıt sırasında bir hata oluştu."));
-        }
-    }
     @GetMapping("/validate")
     public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String token) {
         try {
