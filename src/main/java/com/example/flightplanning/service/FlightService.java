@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public class FlightService {
@@ -43,7 +44,7 @@ public class FlightService {
         String username = jwtUtil.getUsernameFromToken(token.replace("Bearer ", ""));
         String city = userService.getUserByUsername(username).getCity();
         Integer airportId = airportService.getByCity(city).getId();
-        return flightRepository.findByDepartureAirportId(airportId);
+        return flightRepository.findByAirportIdOrderByDepartureTime(airportId);
     }
 
 
