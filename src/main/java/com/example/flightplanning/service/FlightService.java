@@ -28,17 +28,27 @@ public class FlightService {
 
     public Flight saveFlight(Flight flight) {
         if (checkFlightOverlap(flight)) {
-            throw new RuntimeException("Flight time overlaps with another flight in the same airport");
+            throw new RuntimeException("Uçuşlarda çakışma var.Lütfen işlem yaptığınız havaalanlarında iniş ve varış sürelerine dikkat ediniz. Yarım saatten fazla olması gerekmektedir.");
         }
         return flightRepository.save(flight);
     }
 
     private boolean checkFlightOverlap(Flight flight) {
+        LocalDateTime departureStart = flight.getDepartureTime().minusMinutes(30);
+        LocalDateTime departureEnd = flight.getDepartureTime().plusMinutes(30);
+        LocalDateTime arrivalStart = flight.getArrivalTime().minusMinutes(30);
+        LocalDateTime arrivalEnd = flight.getArrivalTime().plusMinutes(30);
+
         List<Flight> overlappingFlights = flightRepository.findOverlappingFlights(
-                flight.getDepartureAirport().getId(),
-                flight.getDepartureTime(),
-                flight.getArrivalTime()
-        );
-        return !overlappingFlights.isEmpty();
+                flight.getDepartureAirport().getId(), departureStart, departureEnd);
+
+        overlappingFlights.addAll(flightRepository.findOverlappingFlights(
+                flight.getArrivalAirport().getId(), arrivalStart, arrivalEnd));
+
+        List<Flight> cityOverlaps = flightRepository.findFlightsFromSameCity(
+                flight.getDepartureAirport().getCity(), departureStart, departureEnd);
+
+        return !overlappingFlights.isEmpty() || !cityOverlaps.isEmpty();
     }
+
 }

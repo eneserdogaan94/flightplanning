@@ -61,9 +61,9 @@ public class FlightController {
         return flightService.searchDepartureAirportById(airportId);
     }
 
-    @PostMapping
+    @PostMapping("/saveFlight")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Flight> saveFlight(@RequestBody FlightSaveRequest flightSaveRequest) {
+    public ResponseEntity<Flight> saveFlight(@RequestHeader("Authorization") String token ,@RequestBody FlightSaveRequest flightSaveRequest) {
         Airport departureAirport = airportService.getById(flightSaveRequest.getDepartureAirportId());
         Airport arrivalAirport = airportService.getById(flightSaveRequest.getArrivalAirportId());
         Flight flight=new Flight();
