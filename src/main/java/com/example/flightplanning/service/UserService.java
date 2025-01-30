@@ -1,16 +1,26 @@
 package com.example.flightplanning.service;
+import com.example.flightplanning.dto.request.SignupRequest;
+import com.example.flightplanning.dto.response.ErrorResponse;
+import com.example.flightplanning.entity.Role;
 import com.example.flightplanning.entity.User;
 import com.example.flightplanning.repository.UserRepository;
+import com.example.flightplanning.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -20,7 +30,14 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    public User saveUser(User user) {
-        return userRepository.save(user);
+    public void saveUser(SignupRequest signupRequest) {
+        User newUser = new User();
+        newUser.setFirstName(signupRequest.getFirstName());
+        newUser.setLastName(signupRequest.getLastName());
+        newUser.setCity(signupRequest.getCity());
+        newUser.setUsername(signupRequest.getUsername());
+        newUser.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
+        newUser.setRole(Role.USER);
+        userRepository.save(newUser);
     }
 }
