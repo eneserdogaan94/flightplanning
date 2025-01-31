@@ -77,7 +77,8 @@ public class FlightController {
         }
     }
     @PostMapping("/filter")
-    public List<Flight> filterFlights(@RequestBody FlightSearchRequest flightSearchRequest) {
-        return flightService.searchFlights(flightSearchRequest);
+    public ResponseEntity<List<Flight>> filterFlights(@RequestHeader("Authorization") String token ,@RequestBody FlightSearchRequest request) throws MalformedClaimException {
+        List<Flight> flights = flightService.searchFlights(token,request);
+        return ResponseEntity.ok(flights);
     }
 }

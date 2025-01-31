@@ -51,7 +51,10 @@ public class FlightService {
         return flightRepository.findByAirportIdOrderByDepartureTime(airportId);
     }
 
-    public List<Flight> searchFlights(FlightSearchRequest flightSearchRequest) {
+    public List<Flight> searchFlights(String token, FlightSearchRequest flightSearchRequest) throws MalformedClaimException {
+        String username = jwtUtil.getUsernameFromToken(token.replace("Bearer ", ""));
+        String city = userService.getUserByUsername(username).getCity();
+        Integer userAirportId = airportService.getByCity(city).getId();
         Integer departureAirportId = 0;
         Integer arrivalAirportId = 0;
         if(!flightSearchRequest.getDepartureCity().isEmpty()){
@@ -63,7 +66,8 @@ public class FlightService {
         Specification<Flight> spec = FlightSpecification.filterFlights(
                 departureAirportId,
                 arrivalAirportId,
-                flightSearchRequest.getDepartureDate()
+                flightSearchRequest.getDepartureDate(),
+                userAirportId
         );
         return flightRepository.findAll(spec, Sort.by(Sort.Direction.ASC, "departureTime"));
     }
