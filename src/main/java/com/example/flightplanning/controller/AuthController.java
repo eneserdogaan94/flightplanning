@@ -1,21 +1,20 @@
 package com.example.flightplanning.controller;
 
 import com.example.flightplanning.dto.request.LoginRequest;
-import com.example.flightplanning.dto.request.SignupRequest;
 import com.example.flightplanning.dto.response.ErrorResponse;
 import com.example.flightplanning.dto.response.LoginResponse;
 import com.example.flightplanning.dto.response.MessageResponse;
-import com.example.flightplanning.entity.Role;
 import com.example.flightplanning.entity.User;
-import com.example.flightplanning.security.JwtUtil;
 import com.example.flightplanning.repository.UserRepository;
+import com.example.flightplanning.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.*;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 

@@ -2,15 +2,12 @@ package com.example.flightplanning.controller;
 
 import com.example.flightplanning.dto.request.FlightSaveRequest;
 import com.example.flightplanning.dto.request.FlightSearchRequest;
-import com.example.flightplanning.entity.Airport;
 import com.example.flightplanning.entity.Flight;
-import com.example.flightplanning.entity.User;
 import com.example.flightplanning.exception.FlightException;
 import com.example.flightplanning.security.JwtUtil;
 import com.example.flightplanning.service.AirportService;
 import com.example.flightplanning.service.FlightService;
 import com.example.flightplanning.service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.jose4j.jwt.MalformedClaimException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +21,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -68,7 +64,7 @@ public class FlightController {
 
     @PostMapping("/saveFlight")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> saveFlight(@RequestHeader("Authorization") String token ,@RequestBody FlightSaveRequest flightSaveRequest) {
+    public ResponseEntity<?> saveFlight(@RequestHeader("Authorization") String token, @RequestBody FlightSaveRequest flightSaveRequest) {
         try {
             Flight savedFlight = flightService.saveFlight(flightSaveRequest);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedFlight);
@@ -76,9 +72,10 @@ public class FlightController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
     @PostMapping("/filter")
-    public ResponseEntity<List<Flight>> filterFlights(@RequestHeader("Authorization") String token ,@RequestBody FlightSearchRequest request) throws MalformedClaimException {
-        List<Flight> flights = flightService.searchFlights(token,request);
+    public ResponseEntity<List<Flight>> filterFlights(@RequestHeader("Authorization") String token, @RequestBody FlightSearchRequest request) throws MalformedClaimException {
+        List<Flight> flights = flightService.searchFlights(token, request);
         return ResponseEntity.ok(flights);
     }
 }

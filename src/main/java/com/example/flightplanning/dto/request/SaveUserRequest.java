@@ -1,7 +1,5 @@
 package com.example.flightplanning.dto.request;
 
-import jakarta.persistence.Column;
-
 public class SaveUserRequest {
 
     private String firstName;

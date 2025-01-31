@@ -15,12 +15,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestHeader;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Service
 public class FlightService {
@@ -44,6 +41,7 @@ public class FlightService {
     public List<Flight> searchFlights(Integer departureAirportId, Integer arrivalAirportId, LocalDateTime start, LocalDateTime end) {
         return flightRepository.findByDepartureAirportIdAndArrivalAirportIdAndDepartureTimeBetween(departureAirportId, arrivalAirportId, start, end);
     }
+
     public List<Flight> searchDepartureAirportById(String token) throws MalformedClaimException {
         String username = jwtUtil.getUsernameFromToken(token.replace("Bearer ", ""));
         String city = userService.getUserByUsername(username).getCity();
@@ -57,10 +55,10 @@ public class FlightService {
         Integer userAirportId = airportService.getByCity(city).getId();
         Integer departureAirportId = 0;
         Integer arrivalAirportId = 0;
-        if(!flightSearchRequest.getDepartureCity().isEmpty()){
+        if (!flightSearchRequest.getDepartureCity().isEmpty()) {
             departureAirportId = airportService.getByCity(flightSearchRequest.getDepartureCity()).getId();
         }
-        if(!flightSearchRequest.getArrivalCity().isEmpty()){
+        if (!flightSearchRequest.getArrivalCity().isEmpty()) {
             arrivalAirportId = airportService.getByCity(flightSearchRequest.getArrivalCity()).getId();
         }
         Specification<Flight> spec = FlightSpecification.filterFlights(
@@ -75,7 +73,7 @@ public class FlightService {
     public Flight saveFlight(FlightSaveRequest flightSaveRequest) {
         Airport departureAirport = airportService.getById(flightSaveRequest.getDepartureAirportId());
         Airport arrivalAirport = airportService.getById(flightSaveRequest.getArrivalAirportId());
-        Flight flight=new Flight();
+        Flight flight = new Flight();
         flight.setArrivalAirport(arrivalAirport);
         flight.setDepartureAirport(departureAirport);
         flight.setArrivalTime(flightSaveRequest.getArrivalTime());
@@ -120,7 +118,7 @@ public class FlightService {
                 flight.getDepartureAirport().getCity(), departureStart, departureEnd);
 
         // 4. Kural: İniş ve kalkış sürelerinin arası 30 dakika olmalıdır.
-        if(!overlappingFlights.isEmpty() || !cityOverlaps.isEmpty()){
+        if (!overlappingFlights.isEmpty() || !cityOverlaps.isEmpty()) {
             throw new FlightException("Uçuşlarda çakışma var. Lütfen iniş ve kalkış sürelerinin arası 30 dakika olmalıdır.");
         }
 

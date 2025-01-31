@@ -22,8 +22,10 @@ public interface FlightRepository extends JpaRepository<Flight, Integer>, JpaSpe
 
     List<Flight> findByDepartureAirportIdAndArrivalAirportIdAndDepartureTimeBetween(
             Integer departureAirportId, Integer arrivalAirportId, LocalDateTime start, LocalDateTime end);
+
     @Query("SELECT f FROM Flight f WHERE f.departureAirport.id = :airportId OR f.arrivalAirport.id = :airportId ORDER BY f.departureTime ASC")
     List<Flight> findByAirportIdOrderByDepartureTime(@Param("airportId") Integer airportId);
+
     @Query("SELECT f FROM Flight f WHERE f.departureAirport.city = :city " +
             "AND f.departureTime BETWEEN :startTime AND :endTime")
     List<Flight> findFlightsFromSameCity(String city, LocalDateTime startTime, LocalDateTime endTime);

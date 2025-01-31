@@ -1,13 +1,9 @@
 package com.example.flightplanning.controller;
 
-import com.example.flightplanning.dto.request.SaveUserRequest;
 import com.example.flightplanning.dto.request.SignupRequest;
 import com.example.flightplanning.dto.response.ErrorResponse;
 import com.example.flightplanning.dto.response.MessageResponse;
-import com.example.flightplanning.entity.Flight;
-import com.example.flightplanning.entity.Role;
 import com.example.flightplanning.entity.User;
-import com.example.flightplanning.exception.FlightException;
 import com.example.flightplanning.repository.UserRepository;
 import com.example.flightplanning.security.JwtUtil;
 import com.example.flightplanning.service.UserService;

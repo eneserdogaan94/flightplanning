@@ -31,23 +31,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String authHeader = request.getHeader("Authorization");
         if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
-                String token = authHeader.substring(7); // 'Bearer 'ın uzunluğu = 7
-        if (jwtUtil.validateToken(token)) {
-            String username = null;
-            try {
-                username = jwtUtil.getUsernameFromToken(token);
-            } catch (MalformedClaimException e) {
-                throw new RuntimeException(e);
+            String token = authHeader.substring(7); // 'Bearer 'ın uzunluğu = 7
+            if (jwtUtil.validateToken(token)) {
+                String username = null;
+                try {
+                    username = jwtUtil.getUsernameFromToken(token);
+                } catch (MalformedClaimException e) {
+                    throw new RuntimeException(e);
+                }
+
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails, null, userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-    }
         filterChain.doFilter(request, response);
-}
+    }
 }
