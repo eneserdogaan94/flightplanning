@@ -22,7 +22,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("Kullanıcı bulunamadı: " + username);
         }
 
-        // Kullanıcının rolünü SimpleGrantedAuthority ile tanımlıyoruz
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getRole().name());
 
         return new org.springframework.security.core.userdetails.User(

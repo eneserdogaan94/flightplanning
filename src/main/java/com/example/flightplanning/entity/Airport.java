@@ -26,7 +26,6 @@ public class Airport {
     @JsonBackReference
     private List<Flight> arrivalFlights;
 
-    // Getters and Setters
     public Integer getId() {
         return id;
     }

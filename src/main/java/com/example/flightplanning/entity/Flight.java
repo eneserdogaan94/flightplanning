@@ -29,7 +29,6 @@ public class Flight {
     @Column(nullable = false)
     private LocalDateTime arrivalTime;
 
-    // Getters and Setters
     public Integer getId() {
         return id;
     }

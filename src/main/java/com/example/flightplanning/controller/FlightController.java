@@ -1,6 +1,7 @@
 package com.example.flightplanning.controller;
 
 import com.example.flightplanning.dto.request.FlightSaveRequest;
+import com.example.flightplanning.dto.request.FlightSearchRequest;
 import com.example.flightplanning.entity.Airport;
 import com.example.flightplanning.entity.Flight;
 import com.example.flightplanning.entity.User;
@@ -74,5 +75,9 @@ public class FlightController {
         } catch (FlightException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
+    @PostMapping("/filter")
+    public List<Flight> filterFlights(@RequestBody FlightSearchRequest flightSearchRequest) {
+        return flightService.searchFlights(flightSearchRequest);
     }
 }

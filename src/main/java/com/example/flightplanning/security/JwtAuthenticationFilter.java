@@ -40,10 +40,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 throw new RuntimeException(e);
             }
 
-            // DB'den userDetails çeker
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            // SecurityContext'e yetkilendirme bilgisi setle
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());
